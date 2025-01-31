@@ -3,6 +3,8 @@ package com.nipam.infotech.model;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -30,5 +32,6 @@ public class Product {
 	@ManyToOne
 	@JoinColumn(name = "category_id")
 	@OnDelete(action = OnDeleteAction.CASCADE)
+	@JsonBackReference
 	private Category category;
 }

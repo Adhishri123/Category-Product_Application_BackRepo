@@ -1,8 +1,8 @@
 package com.nipam.infotech.serviceimpl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.convert.ConverterBuilder.WritingConverterAware;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -16,17 +16,17 @@ public class CategoryServiceImpl implements CategoryService {
 
 	@Autowired
 	CategoryRepository categoryRepository;
-	
-	@Override
-	public Page<Category> getAllCategories(Pageable pageable) {
-		
-		return categoryRepository.findAll(pageable);
-	}
 
 	@Override
 	public Category saveCategory(Category category) {
 		
 		return categoryRepository.save(category);
+	}
+	
+	@Override
+	public List<Category> getAllCategories(long pageNo) {
+		Pageable pageable = PageRequest.of((int) pageNo, 2);
+		return categoryRepository.findAll(pageable).getContent();
 	}
 
 	@Override

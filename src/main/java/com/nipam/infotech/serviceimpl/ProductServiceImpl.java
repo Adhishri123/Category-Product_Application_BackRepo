@@ -1,9 +1,10 @@
 package com.nipam.infotech.serviceimpl;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,53 +24,6 @@ public class ProductServiceImpl implements ProductService {
 	@Autowired
 	CategoryRepository categoryRepository;
 	
-	@Override
-	public Page<Product> getAllProducts(Pageable pageable) {
-		
-		return productRepository.findAll(pageable);
-	}
-
-//	@Override
-//	public Product createProduct(Product product) {
-//		
-////		return productRepository.save(product);
-//		
-//		Category category = categoryRepository.findById(product.getCategory().getId())
-//                .orElseThrow(() -> new RuntimeException("Category not found"));
-//        product.setCategory(category);
-//        return productRepository.save(product);
-//	}
-
-	@Override
-	public Product getProductById(Long id) {
-		
-		return productRepository.findById(id).orElseThrow(() -> new RuntimeException("Product not found...!"));
-	}
-
-//	@Override
-//	public Product updateProduct(Long id, Product product) {
-//		Product existingProduct = getProductById(id);
-//		existingProduct.setName(product.getName());
-//		existingProduct.setPrice(product.getPrice());
-//		existingProduct.setDescription(product.getDescription());
-//		existingProduct.setStock(product.getStock());
-//		existingProduct.setImage(product.getImage());
-//		
-////		if (product.getCategory() != null) {
-////            Category category = categoryRepository.findById(product.getCategory().getId())
-////                    .orElseThrow(() -> new RuntimeException("Category not found"));
-////            existingProduct.setCategory(category);
-////        }
-//		
-//	    return productRepository.save(existingProduct);
-//	}
-
-	@Override
-	public void deleteProduct(Long id) {
-		
-		productRepository.deleteById(id);
-	}
-
 	@Override
 	public Product createProduct(String name, Double price, String description, Long stock, Long categoryId,
 			MultipartFile image) {
@@ -93,7 +47,19 @@ public class ProductServiceImpl implements ProductService {
 
         return productRepository.save(product);
 	}
+	
+	@Override
+	public List<Product> getAllProducts(long pageNo) {
+		Pageable pageable = PageRequest.of((int) pageNo, 2);
+		return productRepository.findAll(pageable).getContent();
+	}
 
+	@Override
+	public Product getProductById(Long id) {
+		
+		return productRepository.findById(id).orElseThrow(() -> new RuntimeException("Product not found...!"));
+	}
+	
 	@Override
 	public Product updateProduct(Long id, String name, Double price, String description, Long stock, Long categoryId,
 			MultipartFile image) {
@@ -120,5 +86,10 @@ public class ProductServiceImpl implements ProductService {
 
         return productRepository.save(existingProduct);
 	}
-	
+
+	@Override
+	public void deleteProduct(Long id) {
+		
+		productRepository.deleteById(id);
+	}
 }
